@@ -109,6 +109,13 @@ module.exports = {
       if (customId === 'view') {
         const identifiers = await IdentifierService.viewIdentifiers(selectedType);
 
+        if(identifiers === 'null'){
+          await interaction.reply({ content: 'No identifiers are found.', ephemeral: true });
+          return 0;
+        }
+
+
+
         const embed = new EmbedBuilder()
           .setTitle(`Displaying ${selectedType} identifiers`)
           .setDescription(`List of ${selectedType} identifiers`)
