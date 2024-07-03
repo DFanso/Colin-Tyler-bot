@@ -1,5 +1,5 @@
 const { InteractionType, EmbedBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, TextInputBuilder, TextInputStyle, ModalBuilder, StringSelectMenuBuilder } = require('discord.js');
-const { handleAddIdentifier, handleRemoveIdentifier, handleViewIdentifiers } = require('../handlers/buttonHandlers');
+const { handleAddIdentifier, handleRemoveIdentifier, handleViewIdentifiers } = require('../handlers/adminButtonHandlers');
 const IdentifierService = require('../services/identifierService');
 
 module.exports = {
@@ -89,8 +89,8 @@ module.exports = {
         }
 
         await interaction.reply({ content: response || 'Operation completed successfully.', ephemeral: true });
-      } else if (customId.startsWith('identifierAction_view')) {
-        const [_, __, type] = customId.split('_');
+      } else if (customId === 'identifierAction_view') {
+        const type = interaction.fields.getTextInputValue('typeInput');
         const identifiers = await IdentifierService.viewIdentifiers(type);
 
         const embed = new EmbedBuilder()
@@ -106,21 +106,34 @@ module.exports = {
       const { customId, values } = interaction;
       const selectedType = values[0];
 
-      const modal = new ModalBuilder()
-        .setCustomId(`identifierAction_${customId}_${selectedType}`)
-        .setTitle(`${customId.charAt(0).toUpperCase() + customId.slice(1)} Identifier`);
+      if (customId === 'view') {
+        const identifiers = await IdentifierService.viewIdentifiers(selectedType);
 
-      const idInput = new TextInputBuilder()
-        .setCustomId('idInput')
-        .setLabel('Identifier')
-        .setStyle(TextInputStyle.Short)
-        .setRequired(true);
+        const embed = new EmbedBuilder()
+          .setTitle(`Displaying ${selectedType} identifiers`)
+          .setDescription(`List of ${selectedType} identifiers`)
+          .setColor(0x0099FF);
 
-      const actionRow = new ActionRowBuilder().addComponents(idInput);
+        identifiers.forEach(id => embed.addFields({ name: 'Identifier', value: id }));
 
-      modal.addComponents(actionRow);
+        await interaction.reply({ embeds: [embed], ephemeral: true });
+      } else {
+        const modal = new ModalBuilder()
+          .setCustomId(`identifierAction_${customId}_${selectedType}`)
+          .setTitle(`${customId.charAt(0).toUpperCase() + customId.slice(1)} Identifier`);
 
-      await interaction.showModal(modal);
+        const idInput = new TextInputBuilder()
+          .setCustomId('idInput')
+          .setLabel('Identifier')
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true);
+
+        const actionRow = new ActionRowBuilder().addComponents(idInput);
+
+        modal.addComponents(actionRow);
+
+        await interaction.showModal(modal);
+      }
     }
   },
 };
