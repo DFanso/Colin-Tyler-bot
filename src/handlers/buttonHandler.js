@@ -1,8 +1,9 @@
 const { handleAddIdentifier, handleRemoveIdentifier, handleViewIdentifiers } = require('./adminButtonHandlers');
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('../utils/constants');
+const { ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 
 module.exports = async function handleButton(interaction) {
   const { customId } = interaction;
+
   if (customId === 'add_identifier') {
     await handleAddIdentifier(interaction);
   } else if (customId === 'remove_identifier') {
