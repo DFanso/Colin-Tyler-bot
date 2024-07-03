@@ -52,7 +52,7 @@ module.exports = {
         if (channel && channel.type === ChannelType.GuildText) {
           const embed = new EmbedBuilder()
             .setColor(0x0099FF)
-            .setTitle('Update Identifiers')
+            .setTitle('Identifiers Management!')
             .setDescription('Select an action to proceed.');
 
           const addButton = new ButtonBuilder()
