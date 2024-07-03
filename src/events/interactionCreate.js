@@ -109,7 +109,7 @@ module.exports = {
       if (customId === 'view') {
         const identifiers = await IdentifierService.viewIdentifiers(selectedType);
 
-        if(identifiers === 'null'){
+        if(identifiers === null){
           await interaction.reply({ content: 'No identifiers are found.', ephemeral: true });
           return 0;
         }

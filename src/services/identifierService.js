@@ -38,9 +38,8 @@ class IdentifierService {
     }
 
     const identifiers = await Identifier.find({ type });
-    console.log(identifiers)
     if (!identifiers.length) {
-      return `null`;
+      return null;
     }
     return identifiers.map(identifier => identifier.value);
   }
