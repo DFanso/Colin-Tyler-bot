@@ -1,6 +1,6 @@
 const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 
-function paginationEmbed(interaction, pages, emojiList = ['⏪', '⏩'], timeout = 120000) {
+function paginationEmbed(interaction, pages, emojiList = ['First', 'Last'], timeout = 120000) {
   if (!interaction || !pages) throw new Error('interaction and pages are required.');
   if (!Array.isArray(pages)) throw new Error('pages must be an array.');
 
@@ -10,19 +10,19 @@ function paginationEmbed(interaction, pages, emojiList = ['⏪', '⏩'], timeout
     .addComponents(
       new ButtonBuilder()
         .setCustomId('first')
-        .setLabel('⏪')
+        .setLabel('First')
         .setStyle('Secondary'),
       new ButtonBuilder()
         .setCustomId('previous')
-        .setLabel('◀️')
+        .setLabel('Previous')
         .setStyle('Secondary'),
       new ButtonBuilder()
         .setCustomId('next')
-        .setLabel('▶️')
+        .setLabel('Next')
         .setStyle('Secondary'),
       new ButtonBuilder()
         .setCustomId('last')
-        .setLabel('⏩')
+        .setLabel('Last')
         .setStyle('Secondary'),
     );
 
@@ -57,22 +57,22 @@ function paginationEmbed(interaction, pages, emojiList = ['⏪', '⏩'], timeout
           .addComponents(
             new ButtonBuilder()
               .setCustomId('first')
-              .setLabel('⏪')
+              .setLabel('First')
               .setStyle('Secondary')
               .setDisabled(true),
             new ButtonBuilder()
               .setCustomId('previous')
-              .setLabel('◀️')
+              .setLabel('Previous')
               .setStyle('Secondary')
               .setDisabled(true),
             new ButtonBuilder()
               .setCustomId('next')
-              .setLabel('▶️')
+              .setLabel('Next')
               .setStyle('Secondary')
               .setDisabled(true),
             new ButtonBuilder()
               .setCustomId('last')
-              .setLabel('⏩')
+              .setLabel('Last')
               .setStyle('Secondary')
               .setDisabled(true),
           );
