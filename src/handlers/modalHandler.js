@@ -1,4 +1,3 @@
-// src/handlers/modalHandler.js
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChannelType } = require('../utils/constants');
 const IdentifierService = require('../services/identifierService');
 

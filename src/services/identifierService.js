@@ -2,8 +2,16 @@ const Identifier = require('../models/identifier');
 
 class IdentifierService {
   static async addIdentifier(type, value) {
-    // Validate type
-    if (type !== 'binary' && type !== 'triple') {
+    // Validate type and length
+    if (type === 'binary') {
+      if (value.length < 2 || value.length > 3) {
+        return `Invalid length for binary: must be between 2 and 3 characters.`;
+      }
+    } else if (type === 'triple') {
+      if (value.length < 3 || value.length > 4) {
+        return `Invalid length for triple: must be between 3 and 4 characters.`;
+      }
+    } else {
       return `Invalid type: ${type}. Must be 'binary' or 'triple'.`;
     }
 

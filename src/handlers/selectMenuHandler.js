@@ -29,7 +29,9 @@ module.exports = async function handleSelectMenu(interaction) {
       .setCustomId('idInput')
       .setLabel('Identifier')
       .setStyle(TextInputStyle.Short)
-      .setRequired(true);
+      .setRequired(true)
+      .setMinLength(selectedType === 'binary' ? 2 : 3)
+      .setMaxLength(selectedType === 'binary' ? 3 : 4);
 
     const actionRow = new ActionRowBuilder().addComponents(idInput);
     modal.addComponents(actionRow);
