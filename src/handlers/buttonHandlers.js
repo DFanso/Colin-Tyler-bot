@@ -1,69 +1,45 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder } = require('discord.js');
-const IdentifierService = require('../services/identifierService');
+const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 
 async function handleAddIdentifier(interaction) {
-  const modal = new ModalBuilder()
-    .setCustomId('addIdentifierModal')
-    .setTitle('Add Identifier');
+  const selectMenu = new StringSelectMenuBuilder()
+    .setCustomId('add')
+    .setPlaceholder('Select Type')
+    .addOptions([
+      { label: 'Binary', value: 'binary' },
+      { label: 'Triple', value: 'triple' },
+    ]);
 
-  const typeInput = new TextInputBuilder()
-    .setCustomId('typeInput')
-    .setLabel('Type (binary/triple)')
-    .setStyle(TextInputStyle.Short)
-    .setRequired(true);
+  const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-  const idInput = new TextInputBuilder()
-    .setCustomId('idInput')
-    .setLabel('Identifier')
-    .setStyle(TextInputStyle.Short)
-    .setRequired(true);
-
-  const actionRow1 = new ActionRowBuilder().addComponents(typeInput);
-  const actionRow2 = new ActionRowBuilder().addComponents(idInput);
-
-  modal.addComponents(actionRow1, actionRow2);
-  await interaction.showModal(modal);
+  await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
 }
 
 async function handleRemoveIdentifier(interaction) {
-  const modal = new ModalBuilder()
-    .setCustomId('removeIdentifierModal')
-    .setTitle('Remove Identifier');
+  const selectMenu = new StringSelectMenuBuilder()
+    .setCustomId('remove')
+    .setPlaceholder('Select Type')
+    .addOptions([
+      { label: 'Binary', value: 'binary' },
+      { label: 'Triple', value: 'triple' },
+    ]);
 
-  const typeInput = new TextInputBuilder()
-    .setCustomId('typeInput')
-    .setLabel('Type (binary/triple)')
-    .setStyle(TextInputStyle.Short)
-    .setRequired(true);
+  const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-  const idInput = new TextInputBuilder()
-    .setCustomId('idInput')
-    .setLabel('Identifier')
-    .setStyle(TextInputStyle.Short)
-    .setRequired(true);
-
-  const actionRow1 = new ActionRowBuilder().addComponents(typeInput);
-  const actionRow2 = new ActionRowBuilder().addComponents(idInput);
-
-  modal.addComponents(actionRow1, actionRow2);
-  await interaction.showModal(modal);
+  await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
 }
 
 async function handleViewIdentifiers(interaction) {
-  const modal = new ModalBuilder()
-    .setCustomId('viewIdentifierModal')
-    .setTitle('View Identifiers');
+  const selectMenu = new StringSelectMenuBuilder()
+    .setCustomId('view')
+    .setPlaceholder('Select Type')
+    .addOptions([
+      { label: 'Binary', value: 'binary' },
+      { label: 'Triple', value: 'triple' },
+    ]);
 
-  const typeInput = new TextInputBuilder()
-    .setCustomId('typeInput')
-    .setLabel('Type (binary/triple)')
-    .setStyle(TextInputStyle.Short)
-    .setRequired(true);
+  const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-  const actionRow = new ActionRowBuilder().addComponents(typeInput);
-  
-  modal.addComponents(actionRow);
-  await interaction.showModal(modal);
+  await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
 }
 
 module.exports = {

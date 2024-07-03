@@ -1,4 +1,4 @@
-const { InteractionType, EmbedBuilder, ChannelType, PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, TextInputBuilder, TextInputStyle, ModalBuilder } = require('discord.js');
+const { InteractionType, EmbedBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, TextInputBuilder, TextInputStyle, ModalBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { handleAddIdentifier, handleRemoveIdentifier, handleViewIdentifiers } = require('../handlers/buttonHandlers');
 const IdentifierService = require('../services/identifierService');
 
@@ -50,11 +50,10 @@ module.exports = {
         const channel = await interaction.guild.channels.fetch(channelId);
 
         if (channel && channel.type === ChannelType.GuildText) {
-          const setupType = interaction.customId === 'setup_identifier' ? 'Identifier Management' : 'Ticket Management';
           const embed = new EmbedBuilder()
             .setColor(0x0099FF)
-            .setTitle(`Setup ${setupType}`)
-            .setDescription(`Click a button below to proceed.\n\n**Add**\nChoose this option to add an ID to the list of available IDs.\n\n**Remove**\nSelect this option to remove an ID from the list of available IDs.\n\n**View**\nUse this option to view the list of available IDs.`);
+            .setTitle('Update Identifiers')
+            .setDescription('Select an action to proceed.');
 
           const addButton = new ButtonBuilder()
             .setCustomId('add_identifier')
@@ -74,24 +73,24 @@ module.exports = {
           const row = new ActionRowBuilder().addComponents(addButton, removeButton, viewButton);
 
           await channel.send({ embeds: [embed], components: [row] });
-          await interaction.reply({ content: 'Embed sent to the specified channel.', ephemeral: true });
+          await interaction.reply({ content: 'Setup complete. Embed sent to the specified channel.', ephemeral: true });
         } else {
           await interaction.reply({ content: 'Channel not found or is not a text channel.', ephemeral: true });
         }
-      } else if (customId === 'addIdentifierModal' || customId === 'removeIdentifierModal') {
-        const type = interaction.fields.getTextInputValue('typeInput');
+      } else if (customId.startsWith('identifierAction')) {
+        const [_, action, type] = customId.split('_');
         const value = interaction.fields.getTextInputValue('idInput');
 
         let response;
-        if (customId === 'addIdentifierModal') {
+        if (action === 'add') {
           response = await IdentifierService.addIdentifier(type, value);
-        } else if (customId === 'removeIdentifierModal') {
+        } else if (action === 'remove') {
           response = await IdentifierService.removeIdentifier(type, value);
         }
 
-        await interaction.reply({ content: response, ephemeral: true });
-      } else if (customId === 'viewIdentifierModal') {
-        const type = interaction.fields.getTextInputValue('typeInput');
+        await interaction.reply({ content: response || 'Operation completed successfully.', ephemeral: true });
+      } else if (customId.startsWith('identifierAction_view')) {
+        const [_, __, type] = customId.split('_');
         const identifiers = await IdentifierService.viewIdentifiers(type);
 
         const embed = new EmbedBuilder()
@@ -103,6 +102,25 @@ module.exports = {
 
         await interaction.reply({ embeds: [embed], ephemeral: true });
       }
+    } else if (interaction.isStringSelectMenu()) {
+      const { customId, values } = interaction;
+      const selectedType = values[0];
+
+      const modal = new ModalBuilder()
+        .setCustomId(`identifierAction_${customId}_${selectedType}`)
+        .setTitle(`${customId.charAt(0).toUpperCase() + customId.slice(1)} Identifier`);
+
+      const idInput = new TextInputBuilder()
+        .setCustomId('idInput')
+        .setLabel('Identifier')
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
+
+      const actionRow = new ActionRowBuilder().addComponents(idInput);
+
+      modal.addComponents(actionRow);
+
+      await interaction.showModal(modal);
     }
   },
 };
