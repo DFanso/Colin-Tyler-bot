@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextInputBuilder, TextInputStyle, ModalBuilder, PermissionsBitField } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(0x0099FF)
       .setTitle('Setup Options')
-      .setDescription('Choose what you want to set up:\n\n**Identifier Management**\nSetup the bot for managing identifiers.\n\n**Ticket Management**\nSetup the bot for managing tickets (to be implemented).');
+      .setDescription('Choose what you want to set up:\n\n**Identifier Management**\nSetup the bot for managing identifiers.\n\n**Ticket Management**\nSetup the bot for managing tickets.');
 
     const identifierButton = new ButtonBuilder()
       .setCustomId('setup_identifier')

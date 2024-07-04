@@ -1,6 +1,6 @@
 const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 
-async function paginationEmbed(interaction, pages, emojiList = ['First', 'Last'], timeout = 120000) {
+async function paginationEmbed(interaction, pages, timeout = 120000) {
   if (!interaction || !pages) throw new Error('interaction and pages are required.');
   if (!Array.isArray(pages)) throw new Error('pages must be an array.');
 
@@ -33,27 +33,23 @@ async function paginationEmbed(interaction, pages, emojiList = ['First', 'Last']
   const collector = interaction.channel.createMessageComponentCollector({ filter, time: timeout });
 
   collector.on('collect', async i => {
-    try {
-      switch (i.customId) {
-        case 'first':
-          page = 0;
-          break;
-        case 'previous':
-          page = page > 0 ? --page : 0;
-          break;
-        case 'next':
-          page = page + 1 < pages.length ? ++page : pages.length - 1;
-          break;
-        case 'last':
-          page = pages.length - 1;
-          break;
-      }
-      await i.deferUpdate();
-      await i.followUp({ embeds: [pages[page]], components: [row], ephemeral: true });
-      collector.resetTimer();
-    } catch (error) {
-      console.error('Error sending new message:', error);
+    switch (i.customId) {
+      case 'first':
+        page = 0;
+        break;
+      case 'previous':
+        page = page > 0 ? --page : 0;
+        break;
+      case 'next':
+        page = page + 1 < pages.length ? ++page : pages.length - 1;
+        break;
+      case 'last':
+        page = pages.length - 1;
+        break;
     }
+    await i.deferUpdate();
+    await interaction.editReply({ embeds: [pages[page]], components: [row] });
+    collector.resetTimer();
   });
 
   collector.on('end', async (_, reason) => {
@@ -82,9 +78,11 @@ async function paginationEmbed(interaction, pages, emojiList = ['First', 'Last']
             .setDisabled(true),
         );
       try {
-        await interaction.followUp({ embeds: [pages[page]], components: [disabledRow], ephemeral: true });
+        await interaction.editReply({ embeds: [pages[page]], components: [disabledRow] });
       } catch (error) {
-        console.error('Error sending final disabled message:', error);
+        if (error.code !== 10008) {
+          console.error('Error editing final disabled message:', error);
+        }
       }
     }
   });
