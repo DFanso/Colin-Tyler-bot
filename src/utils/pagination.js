@@ -26,7 +26,7 @@ function paginationEmbed(interaction, pages, emojiList = ['First', 'Last'], time
         .setStyle('Secondary'),
     );
 
-  interaction.reply({ embeds: [pages[page]], components: [row], fetchReply: true }).then(curPage => {
+  interaction.reply({ embeds: [pages[page]], components: [row], fetchReply: true ,ephemeral: true}).then(curPage => {
     const filter = i => i.customId === 'first' || i.customId === 'previous' || i.customId === 'next' || i.customId === 'last';
 
     const collector = curPage.createMessageComponentCollector({ filter, time: timeout });
@@ -47,7 +47,7 @@ function paginationEmbed(interaction, pages, emojiList = ['First', 'Last'], time
           break;
       }
       await i.deferUpdate();
-      await i.editReply({ embeds: [pages[page]], components: [row] });
+      await i.editReply({ embeds: [pages[page]], components: [row] , ephemeral: true});
       collector.resetTimer();
     });
 
@@ -76,7 +76,7 @@ function paginationEmbed(interaction, pages, emojiList = ['First', 'Last'], time
               .setStyle('Secondary')
               .setDisabled(true),
           );
-        curPage.edit({ embeds: [pages[page]], components: [disabledRow] });
+        curPage.edit({ embeds: [pages[page]], components: [disabledRow] , ephemeral: true});
       }
     });
   });
