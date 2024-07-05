@@ -26,7 +26,7 @@ async function paginationEmbed(interaction, pages, timeout = 120000) {
         .setStyle('Secondary'),
     );
 
-  await interaction.reply({ embeds: [pages[page]], components: [row], ephemeral: true });
+  await interaction.update({ embeds: [pages[page]], components: [row], ephemeral: true });
 
   const filter = i => ['first', 'previous', 'next', 'last'].includes(i.customId) && i.user.id === interaction.user.id;
 

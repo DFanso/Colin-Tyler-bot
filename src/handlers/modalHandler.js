@@ -31,9 +31,10 @@ module.exports = async function handleModal(interaction) {
 
       const row = new ActionRowBuilder().addComponents(addButton, removeButton, viewButton);
       await channel.send({ embeds: [embed], components: [row] });
-      await interaction.reply({ content: 'Setup complete. Embed sent to the specified channel.', ephemeral: true });
+
+      await interaction.update({ content: 'Setup complete. Embed sent to the specified channel.', components: [], ephemeral: true });
     } else {
-      await interaction.reply({ content: 'Channel not found or is not a text channel.', ephemeral: true });
+      await interaction.update({ content: 'Channel not found or is not a text channel.', components: [], ephemeral: true });
     }
   } else if (customId.startsWith('identifierAction')) {
     const [_, action, type] = customId.split('_');
@@ -46,7 +47,7 @@ module.exports = async function handleModal(interaction) {
       response = await IdentifierService.removeIdentifier(type, value);
     }
 
-    await interaction.reply({ content: response || 'Operation completed successfully.', ephemeral: true });
+    await interaction.update({ content: response || 'Operation completed successfully.', components: [], ephemeral: true });
   } else if (customId === 'identifierAction_view') {
     const type = interaction.fields.getTextInputValue('typeInput');
     const identifiers = await IdentifierService.viewIdentifiers(type);
@@ -57,6 +58,7 @@ module.exports = async function handleModal(interaction) {
       .setColor(0x0099FF);
 
     identifiers.forEach(id => embed.addFields({ name: 'Identifier', value: id }));
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+
+    await interaction.update({ embeds: [embed], components: [], ephemeral: true });
   }
 };

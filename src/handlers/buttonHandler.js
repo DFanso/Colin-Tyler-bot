@@ -1,6 +1,5 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
+const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { handleAddIdentifier, handleRemoveIdentifier, handleViewIdentifiers } = require('./adminButtonHandlers');
-const { handleBuyId, handleBuyRole, handleRequestInquiry } = require('./ticketHandlers');
 
 module.exports = async function handleButton(interaction) {
   const { customId } = interaction;
@@ -27,24 +26,6 @@ module.exports = async function handleButton(interaction) {
       .setStyle(ButtonStyle.Primary);
 
     const row = new ActionRowBuilder().addComponents(addButton, removeButton, viewButton);
-
-    await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
-  } else if (customId === 'setup_ticket') {
-    const embed = new EmbedBuilder()
-      .setColor(0x0099FF)
-      .setTitle('Ticket Management')
-      .setDescription('Choose an option:\n\n**Buy ID**\n**Buy Role**\n**Request an Inquiry**');
-
-    const selectMenu = new StringSelectMenuBuilder()
-      .setCustomId('ticket_setup_menu')
-      .setPlaceholder('Choose an option')
-      .addOptions([
-        { label: 'Buy ID', value: 'buy_id' },
-        { label: 'Buy Role', value: 'buy_role' },
-        { label: 'Request an Inquiry', value: 'request_inquiry' },
-      ]);
-
-    const row = new ActionRowBuilder().addComponents(selectMenu);
 
     await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
   } else if (customId === 'add_identifier') {

@@ -1,4 +1,4 @@
-const { ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
+const { StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 
 async function handleAddIdentifier(interaction) {
   const selectMenu = new StringSelectMenuBuilder()
@@ -11,7 +11,18 @@ async function handleAddIdentifier(interaction) {
 
   const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-  await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  if (!interaction.replied && !interaction.deferred) {
+    await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  } else {
+    await interaction.editReply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  }
+
+  setTimeout(async () => {
+    const disabledRow = new ActionRowBuilder().addComponents(
+      selectMenu.setDisabled(true)
+    );
+    await interaction.editReply({ content: 'The selection has timed out.', components: [disabledRow], ephemeral: true });
+  }, 2 * 60 * 1000); // 2 minutes
 }
 
 async function handleRemoveIdentifier(interaction) {
@@ -25,7 +36,18 @@ async function handleRemoveIdentifier(interaction) {
 
   const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-  await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  if (!interaction.replied && !interaction.deferred) {
+    await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  } else {
+    await interaction.editReply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  }
+
+  setTimeout(async () => {
+    const disabledRow = new ActionRowBuilder().addComponents(
+      selectMenu.setDisabled(true)
+    );
+    await interaction.editReply({ content: 'The selection has timed out.', components: [disabledRow], ephemeral: true });
+  }, 2 * 60 * 1000); // 2 minutes
 }
 
 async function handleViewIdentifiers(interaction) {
@@ -39,7 +61,18 @@ async function handleViewIdentifiers(interaction) {
 
   const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-  await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  if (!interaction.replied && !interaction.deferred) {
+    await interaction.reply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  } else {
+    await interaction.editReply({ content: 'Please select the type of identifier:', components: [actionRow], ephemeral: true });
+  }
+
+  setTimeout(async () => {
+    const disabledRow = new ActionRowBuilder().addComponents(
+      selectMenu.setDisabled(true)
+    );
+    await interaction.editReply({ content: 'The selection has timed out.', components: [disabledRow], ephemeral: true });
+  }, 2 * 60 * 1000); // 2 minutes
 }
 
 module.exports = {
